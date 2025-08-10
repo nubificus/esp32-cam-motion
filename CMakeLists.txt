@@ -48,4 +48,4 @@ else()
 	message(WARNING "Secure OTA update disabled")
 endif()
 
-project(esp32-ota-update)
+project(esp32-cam-motion)
