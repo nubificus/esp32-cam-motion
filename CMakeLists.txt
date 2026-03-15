@@ -4,6 +4,12 @@
 # CMakeLists in this exact order for cmake to work correctly
 cmake_minimum_required(VERSION 3.16)
 
+# Handle OCT PSRAM variant for ESP32-S3 r8 boards
+if(DEFINED ENV{oct_psram})
+    set(SDKCONFIG_DEFAULTS "sdkconfig.defaults;sdkconfig.defaults.esp32s3r8")
+    message(STATUS "OCT PSRAM mode enabled for ESP32-S3 r8")
+endif()
+
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 
 if(DEFINED ENV{FIRMWARE_VERSION})

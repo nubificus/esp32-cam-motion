@@ -11,9 +11,6 @@ wifi_config_t wifi_config = {
 		.ssid = WIFI_SSID,
 		.password = WIFI_PASS,
 		.threshold.authmode = WIFI_AUTH_WPA2_PSK,
-		.pmf_cfg = {
-			.capable = true,
-			.required = false},
 	},
 };
 
