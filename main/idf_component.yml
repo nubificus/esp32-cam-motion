@@ -6,3 +6,7 @@ dependencies:
     version: "^1.0.0"
   espressif/cjson:
     version: "*"
+  espressif/esp_wifi_remote:
+    version: "*"
+    rules:
+      - if: "target == esp32p4"

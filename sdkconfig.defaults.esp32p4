@@ -9,4 +9,8 @@ CONFIG_SPIRAM_BOOT_INIT=y
 CONFIG_SPIRAM_USE_MALLOC=y
 CONFIG_SPIRAM_MALLOC_ALWAYSINTERNAL=16384
 CONFIG_SPIRAM_MALLOC_RESERVE_INTERNAL=32768
-CONFIG_ESP_HOST_WIFI_ENABLED=y
+# WiFi via co-processor (esp_hosted + wifi_remote) - ESP32-P4 has no native WiFi.
+# espressif/esp_wifi_remote managed component is added to idf_component.yml.
+# Selects ESP32-C6 as WiFi co-processor (default for P4-Function-EV-Board).
+# Adjust CONFIG_SLAVE_IDF_TARGET_* if your board uses a different co-processor.
+CONFIG_SLAVE_IDF_TARGET_ESP32C6=y

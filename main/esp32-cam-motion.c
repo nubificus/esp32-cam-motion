@@ -47,6 +47,13 @@ static const char *TAG = "esp32-cam motion";
 
 static esp_err_t init_camera(void)
 {
+#ifdef CONFIG_IDF_TARGET_ESP32P4
+    /* ESP32-P4 uses a MIPI CSI camera interface, not DVP.
+     * The esp32-camera DVP driver does not support P4.
+     * See ~/develop/esp32-cam-dsi-stream for the CSI/ISP-based implementation. */
+    ESP_LOGW("cam", "P4: DVP camera not supported; CSI interface not yet integrated");
+    return ESP_ERR_NOT_SUPPORTED;
+#else
     camera_config_t camera_config = {
         .pin_pwdn  = CAM_PIN_PWDN,
         .pin_reset = CAM_PIN_RESET,
@@ -84,6 +91,7 @@ static esp_err_t init_camera(void)
         return err;
     }
     return ESP_OK;
+#endif
 }
 
 #include "esp_http_server.h"
@@ -307,10 +315,14 @@ void app_main(void)
         ret = init_camera();
         if (ret != ESP_OK)
         {
+#ifndef CONFIG_IDF_TARGET_ESP32P4
             printf("err: %s\n", esp_err_to_name(ret));
             return;
-        }        
-	
+#else
+            ESP_LOGW(TAG, "P4: camera unavailable (CSI not integrated), continuing without camera");
+#endif
+        }
+
 	esp_register_shutdown_handler(mqtt_announce_shutdown);
 	int task_res = xTaskCreate(mqtt_announce_online, "mqtt_announce", 4096, NULL, 15, NULL);
 	if (task_res != pdPASS) {
@@ -325,6 +337,11 @@ void app_main(void)
 
     camera_fb_t *fb_prev = NULL;
     while (1) {
+#ifdef CONFIG_IDF_TARGET_ESP32P4
+        /* P4: CSI camera not yet integrated; idle loop */
+        vTaskDelay(pdMS_TO_TICKS(5000));
+        continue;
+#endif
 	if (is_ota_in_progress()) {
             ESP_LOGW(TAG, "OTA in progress, suspending operations");
             esp_camera_deinit();
