@@ -1,0 +1,23 @@
+menu "Camera Board Selection"
+
+    choice BOARD_CAMERA_MODEL
+        prompt "Select camera board"
+        default BOARD_ESP32CAM_AITHINKER
+        help
+            Select the camera board pinout to use.
+
+        config BOARD_ESP32CAM_AITHINKER
+            bool "AI Thinker ESP32-CAM"
+            help
+                AI Thinker ESP32-CAM module (original ESP32 with OV2640).
+
+        config BOARD_ESP32S3_EYE
+            bool "ESP32-S3-EYE / GOOUUU ESP32-S3-CAM"
+            help
+                ESP32-S3-EYE or compatible boards (e.g. GOOUUU ESP32-S3-CAM).
+                XCLK=15, VSYNC=6, HREF=7, PCLK=13, SIOD=4, SIOC=5,
+                D0-D7=11/9/8/10/12/18/17/16, PWDN=38.
+
+    endchoice
+
+endmenu
